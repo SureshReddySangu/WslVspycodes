@@ -1,3 +1,5 @@
+# This code is working  for 1d slabs. this code we can refer as the base code for all 1d slabs
+# in the updates we add the fucntionalities to this code
 import math as m
 import meep as mp
 from meep import mpb
