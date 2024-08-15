@@ -5,7 +5,8 @@
 # we are also going to modify the plotting fucntionality to plot the gaps
 
 #15-08-2024: updating the plotting geometry fucntionality
-#adding the colour bar for the epsilon fucntionality
+#adding the colour bar for the epsilon fucntionality\
+#added the bar graph for the gaps
 
 # importing the required libraries
 import math as m
