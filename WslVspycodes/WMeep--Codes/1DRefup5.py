@@ -1,3 +1,8 @@
+#19-08-2024:
+# here we are adding the plotting of the ez for the number of bands
+# adding the MEEP simualtion to vaisualize tehe Ez field in the geometry
+
+
 # This code is works  for 1d slabs. 
 # In this file we are going to modify the base to add the fuancitoanlities like--
 # Conversion of the normalised frequancy into the wavelength
@@ -11,15 +16,16 @@
 #to plot the al plots in a single figure
 
 # importing the required libraries
-import math as m
+import math as math
 import meep as mp
 from meep import mpb
+import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
 # defining the number of bands and the resolution
-num_bands = 8
+num_bands = 6
 resolution = 64 # Always choose higher resolution for better accuracy
 #normalizaion
 # The units in the Meep and Mpb ar noramlised, do remember to normalise the units
@@ -89,12 +95,11 @@ cmap = matplotlib.colormaps.get_cmap('viridis')
 norm = mcolors.Normalize(vmin=min(eps1, eps2), vmax=max(eps1, eps2))
 
 # defining the figure to plot the multiple sub plots
-fig, ax = plt.subplots(2,2, figsize=(10,10), dpi=100)
+
 
 
 #function for plotting the geometry
 def plt_geo (ax, geometry):
-    # fig, ax = plt.subplots(dpi=100)
     for obj in geometry:
         if obj['type'] == 'block':
             width, height = obj['size']
@@ -116,59 +121,116 @@ def plt_geo (ax, geometry):
     ax.set_xlabel(' um in x direction')
     ax.set_ylabel(' um in y direction')
     # plt.show()
+
+# plotting the tm frequencies & te frequencies
+def plot_band_structures(ax, tm_freqs, te_freqs, tm_gaps, te_gaps):
+    for i, (tmz, tez) in enumerate(zip(tm_freqs, te_freqs)):
+        ax.scatter([i]*len(tmz), tmz, color='blue', s=0.5)
+        ax.scatter([i]*len(tez), tez, color='red', s=0.5)
+    ax.plot(tm_freqs, color='blue')
+    # ax.plot(te_freqs, color='red')
+    ax.set_xlabel('k-points')
+    ax.set_ylabel('Frequency')
+    ax.set_title('TM and TE Frequencies')
+
+    for gap in tm_gaps:
+        if gap[0] > 1:
+            ax.fill_between(range(len(k_points)), gap[1], gap[2], color='blue', alpha=0.5)
+    # for gap in te_gaps:
+    #     if gap[0] > 1:
+            # ax.fill_between(range(len(k_points)), gap[1], gap[2], color='red', alpha=0.5)
+    ax.grid(True)
+    ax.text(0.5, 0.1, 'TE bands', ha='center', va='center', transform=ax.transAxes, color='red')
+    ax.text(0.5, 0.9, 'TM bands', ha='center', va='center', transform=ax.transAxes, color='blue')
+# to plot the gap histograms for the tm and te gaps
+def plot_gap_histograms(ax, gaps, title, color):
+    x = list(range(len(gaps)))
+    for i in range(len(gaps)):
+        ax.bar(x, gaps, color=color, alpha=0.5, width=0.5)
+    ax.set_title(title)
+    ax.set_ylim(0, max(gaps) + 1)
+    ax.set_xlim(0, len(gaps))
+    ax.grid(True)
+#first figure : geometry, band structures and gaps
+fig1, ax = plt.subplots(2,2, figsize=(10,10), dpi=100)
 #here we need to pass the geometry to the function
 # we them as dictionary
 plt_geo(ax[0,0],[
     {'type': 'block', 'size': [d1, h], 'center': [d1/2, 0], 'epsilon': eps1},
     {'type': 'block', 'size': [d2, h], 'center': [d1 + d2/2, 0], 'epsilon': eps2}
 ])
+# to plot band structures and gaps
+plot_band_structures(ax[0,1], tm_freqs, te_freqs, tm_gaps, te_gaps)
 
+# to plot the tm gap histogram
+tm_gap_values = [gap[0] for gap in tm_gaps]
+plot_gap_histograms(ax[1,0], tm_gap_values, 'TM Gaps percentage', 'red')
 
+# to plot the te gap histogram
+te_gap_values = [gap[0] for gap in te_gaps]
+plot_gap_histograms(ax[1,1], te_gap_values, 'TE Gaps percentage', 'green')
 
-# plotting the tm frequencies & te frequencies
-for i,tmz,tez in zip(range(len(k_points)), tm_freqs, te_freqs):
-    ax[0,1].scatter([i]*len(tmz), tmz, color='blue', s=0.5)
-    ax[0,1].scatter([i]*len(tez), tez, color='red', s=0.5)
-ax[0,1].plot(tm_freqs, color='blue')
-ax[0,1].plot(te_freqs, color='red')
-ax[0,1].set_xlabel('k-points')
-ax[0,1].set_ylabel('Frequency')
-ax[0,1].set_title('tm frequencies') 
-
-
-for gap in tm_gaps:
-    if gap[0] > 1:
-        ax[0,1].fill_between(range(len(k_points)),gap[1], gap[2], color='blue', alpha=0.5)
-for gap in te_gaps:
-    if gap[0] > 1:
-        ax[0,1].fill_between(range(len(k_points)),gap[1], gap[2], color='red', alpha=0.5)
-ax[0,1].grid(True)
-
-# extractying the gap percentages from the gap list
-#bar graph for the gaps
-gaps = [gap[0] for gap in tm_gaps]
-# plt.figure()
-x = list(range(len(gaps)))
-for i in range(len(gaps)):
-    ax[1,0].bar(x, gaps, color='red', alpha=0.5, width=0.5)
-ax[1,0].set_title('bar graph for the tm_gaps')
-ax[1,0].set_ylim(0, max(gaps)+1)
-ax[1,0].set_xlim(0, len(gaps))
-ax[1,0].grid(True)
-
-# Plot label for the Tm modes and Te modes
-ax[0,1].text(0.5, 0.1, 'Te bands', ha='center', va='center', transform=ax[0,1].transAxes, color='red')
-ax[0,1].text(0.5, 0.9, 'Tm bands', ha='center', va='center', transform=ax[0,1].transAxes, color='blue')
-
-# bar graph for the te_gaps
-gaps = [gap[0] for gap in te_gaps]
-# plt.figure()
-x = list(range(len(gaps)))
-for i in range(len(gaps)):
-    ax[1,1].bar(x, gaps, color='green', alpha=0.5, width=0.5)
-ax[1,1].set_title('bar graph for the te_gaps')
-ax[1,1].set_ylim(0, max(gaps)+1)
-ax[1,1].set_xlim(0, len(gaps))
-ax[1,1].grid(True)
 plt.tight_layout()
+
+# second figure: ez fields
+fig2 = plt.figure(figsize=(10,10), dpi=100)
+md = mpb.MPBData(rectify=True, resolution=resolution, periods=3)
+eps= ms.get_epsilon()
+converted_eps = md.convert(eps)
+efields = []
+# to get the efields by running the tm mode
+def get_efields(ms, band):
+    efields.append(ms.get_efield(band, bloch_phase=True))
+ms.run_tm(mpb.output_at_kpoint(mp.Vector3(0.5,0,0), get_efields))
+
+converted =[]
+for f in efields:
+    f = f[...,0,2]
+    converted.append(md.convert(f))
+
+for i, f in enumerate(converted):
+    plt.subplot(331+i)
+    plt.contour(converted_eps.T, cmap= 'binary')
+    plt.imshow(np.real(f).T, interpolation='spline36', cmap='RdBu', alpha=0.5)
+    plt.axis('off')
+    plt.colorbar(label='Ez')    # adding the color bar for the plot
+    plt.title(f'band {i+1}')    # adding the band number to the plot
+
+plt.suptitle('Ez Fields')
+plt.show()
+
+#defining the simulation cell
+cell = mp.Vector3(1,1)
+pml_layers = [mp.PML(1.0)]
+
+#defiantion of source
+sources = [mp.Source(mp.ContinuousSource(frequency=0.5),
+                     component = mp.Ez,
+                     center = mp.Vector3(0,h/2),
+                     size=mp.Vector3(1,1))]
+
+# creating the simulation
+sim = mp.Simulation(resolution=resolution, cell_size=cell, 
+                    sources=sources, 
+                    boundary_layers=pml_layers,
+                    geometry=geometry1+geometry2
+                    )
+
+sim.run()
+
+#get teh dielectric constant data
+eps_data = sim.get_array(center=mp.Vector3(0,h/2), component=mp.Dielectric, size = cell,)
+plt.figure()
+plt.imshow(eps_data.T, interpolation='spline36', cmap='viridis', alpha=0.5)
+plt.colorbar(label='epsilon')
+plt.title('epsilon')
+plt.show()
+
+#get the Ez field data
+ez_data = sim.get_array(center=mp.Vector3(0,h/2), component=mp.Ez, size = cell,)
+plt.figure()
+plt.imshow(eps_data.T, interpolation='spline36', cmap='viridis', alpha=0.5)
+plt.imshow(ez_data.T, interpolation='spline36', cmap='RdBu', alpha=0.5)
+plt.colorbar(label='Ez')
+plt.title('Ez')
 plt.show()
