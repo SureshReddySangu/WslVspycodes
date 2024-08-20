@@ -24,8 +24,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
+from matplotlib.animation import FuncAnimation
 # defining the number of bands and the resolution
-num_bands = 6
+num_bands = 4
 resolution = 64 # Always choose higher resolution for better accuracy
 #normalizaion
 # The units in the Meep and Mpb ar noramlised, do remember to normalise the units
@@ -199,15 +200,20 @@ for i, f in enumerate(converted):
 plt.suptitle('Ez Fields')
 plt.show()
 
+#meep simulation
 #defining the simulation cell
-cell = mp.Vector3(1,1)
+cell = mp.Vector3(d+4, d+2)
 pml_layers = [mp.PML(1.0)]
-
+nfreq = 100
+df = 0.1
+fcen = 0.15
 #defiantion of source
-sources = [mp.Source(mp.ContinuousSource(frequency=0.5),
-                     component = mp.Ez,
-                     center = mp.Vector3(0,h/2),
-                     size=mp.Vector3(1,1))]
+sources = [mp.Source(mp.GaussianSource(frequency=fcen, fwidth=df),
+    center=mp.Vector3(0, 0),
+    component=mp.Ez,
+    size=mp.Vector3(0,h) #defifning the size of the source
+)]
+
 
 # creating the simulation
 sim = mp.Simulation(resolution=resolution, cell_size=cell, 
@@ -216,21 +222,21 @@ sim = mp.Simulation(resolution=resolution, cell_size=cell,
                     geometry=geometry1+geometry2
                     )
 
-sim.run()
 
-#get teh dielectric constant data
-eps_data = sim.get_array(center=mp.Vector3(0,h/2), component=mp.Dielectric, size = cell,)
-plt.figure()
-plt.imshow(eps_data.T, interpolation='spline36', cmap='viridis', alpha=0.5)
-plt.colorbar(label='epsilon')
-plt.title('epsilon')
+# set upo the plotting
+fig,ax = plt.subplots(figsize=(10,10), dpi=100)
+ax.set_title('real time Ez Fields')
+field_data = np.zeros((int(cell.x*resolution), int(cell.y*resolution)))
+image = ax.imshow(field_data, interpolation='spline36', cmap='RdBu', alpha=0.5)
+
+#updating fucntion for animation
+def update(frame):
+    sim.run(until = frame)
+    ez_data = sim.get_array(center=mp.Vector3(0,0), component=mp.Ez, size = cell,)
+    image.set_data(ez_data.T)
+    return image,
+#create animation
+ani = FuncAnimation(fig, update, frames=np.arange(0,10,1), interval=1, blit=True, repeat=False)
+plt.colorbar(image, ax =ax, label='Ez')
 plt.show()
 
-#get the Ez field data
-ez_data = sim.get_array(center=mp.Vector3(0,h/2), component=mp.Ez, size = cell,)
-plt.figure()
-plt.imshow(eps_data.T, interpolation='spline36', cmap='viridis', alpha=0.5)
-plt.imshow(ez_data.T, interpolation='spline36', cmap='RdBu', alpha=0.5)
-plt.colorbar(label='Ez')
-plt.title('Ez')
-plt.show()
