@@ -69,7 +69,7 @@ ms=mpb.ModeSolver(
     geometry_lattice=geometry_lattice,
     k_points=k_points,
     num_bands=num_bands,
-    resolution=resolution)
+    resolution=resolution,default_material=mp.Medium(epsilon=1))
 # running the mode solver for the tm modes
 ms.run_tm() # running the mode solver for the tm modes
 tm_freqs = ms.all_freqs # getting the tm frequencies
