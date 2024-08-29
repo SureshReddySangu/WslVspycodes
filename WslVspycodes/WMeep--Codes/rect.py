@@ -36,7 +36,7 @@ gaps = ms.gap_list
 fig, ax = plt.subplots(1, 1)
 
 for i, tmz, in zip(range(len(t_frqs)), t_frqs):
-    ax.scatter([i] * len(tmz), tmz, color="blue", s=0.2, label="TM")
+    ax.scatter([i] * len(tmz), tmz, color="blue", s=0.2, label="TE")
     
 # Calculate and plot the light line
 kx_vals = np.linspace(0, 1, len(k_points))
@@ -54,9 +54,9 @@ for gap in gaps:
 for gap in gaps:
     if gap[0] > 1:
         ax.fill_between(range(len(k_points)), gap[1], gap[2], color="green", alpha=0.5)
-# ax.grid(True)
+ax.grid(True)
 
-# plt.show()
+plt.show()
 ms.compute_zparities()
 ms.compute_yparities()
 
@@ -64,7 +64,7 @@ ms.compute_yparities()
 mpb.output_efield(ms,2)
 import h5py
 
-with h5py.File('e.k05.b02.h5', 'r') as file:
+with h5py.File('rect-e.k05.b02.h5', 'r') as file:
     data0 = file['x.i'][:]
     data1 = file['x.r'][:]
     data2 = file['y.i'][:]
