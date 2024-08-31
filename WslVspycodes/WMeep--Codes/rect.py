@@ -61,10 +61,10 @@ ms.compute_zparities()
 ms.compute_yparities()
 
 # plt.show()
-mpb.output_efield(ms,2)
+mpb.output_efield(ms,1)
 import h5py
 
-with h5py.File('rect-e.k05.b02.h5', 'r') as file:
+with h5py.File('rect-e.k05.b01.h5', 'r') as file:
     data0 = file['x.i'][:]
     data1 = file['x.r'][:]
     data2 = file['y.i'][:]

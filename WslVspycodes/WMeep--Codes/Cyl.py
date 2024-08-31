@@ -64,7 +64,90 @@ fig= plt.imshow(I/np.max(I), cmap='hot')
 plt.colorbar()
 plt.show()
 x,y = np.meshgrid(np.linspace(0,1,128),np.linspace(0,1,128))
-plt.quiver(x,y,Ez_r, Ey_r, color='red', scale = 5)
+plt.quiver(x,y,Ez_r, Ey_r, color='red', scale = 15)
 plt.title('Ez + Ey')
-plt.ylim(0.4,0.6)
-plt.xlim(0.4,0.65)
+
+plt.colorbar()
+plt.show()
+x_dir =[x_dir[0] for x_dir in np.array(k_points)]
+for x_dir in x_dir:
+    # Calculate the components of the standing wave
+    zc_wave_in_px = Ez * np.exp(1j * 1* x_dir)
+    zc_wave_in_nx = Ez * np.exp(-1j *1 * x_dir)
+    t_wave_inz = zc_wave_in_px + zc_wave_in_nx
+    
+    xc_wave_in_px = Ex * np.exp(1j * 1 * x_dir)
+    xc_wave_in_nx = Ex * np.exp(-1j * 1 * x_dir)
+    t_wave_inx = xc_wave_in_px + xc_wave_in_nx
+
+    yc_wave_in_px = Ey * np.exp(1j * 1 * x_dir)
+    yc_wave_in_nx = Ey * np.exp(-1j * 1 * x_dir)
+    t_wave_iny = yc_wave_in_px + yc_wave_in_nx
+    
+    z_total_re = np.real(t_wave_inz)
+    y_total_re = np.real(t_wave_iny)
+
+    # Calculate the standing wave intensity
+    I_std = abs(Ex + t_wave_inx)**2 + abs(Ey + t_wave_iny)**2 + abs(Ez + t_wave_inz)**2
+
+    # Plot the intensity
+    plt.title(f'Standing Wave Intensity for x_dir = {x_dir:.2f}')
+    plt.imshow(I_std/np.max(I_std), cmap='hot')
+    plt.colorbar()
+    plt.show()
+
+    # Plot the quiver plot with updated fields
+    plt.title(f'Standing Wave Field for x_dir = {x_dir:.2f}')
+    plt.quiver(x, y, z_total_re + Ez_r, Ey_r + y_total_re, color='red', scale=15)
+    plt.imshow(eps11, alpha=0.5)
+    plt.colorbar()
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# zc_wave_in_px = Ez*np.exp(1j*0.5*x_dir)
+# zc_wave_in_nx = Ez*np.exp(-1j*0.5*x_dir) 
+# t_wave_inz = zc_wave_in_px + zc_wave_in_nx
+    
+# xc_wave_in_px = Ex*np.exp(1j*0.5*x_dir)
+# xc_wave_in_nx = Ex*np.exp(-1j*0.5*x_dir)
+# t_wave_inx = xc_wave_in_px+xc_wave_in_nx
+
+# yc_wave_in_px = Ey*np.exp(1j*0.5*x_dir)
+# yc_wave_in_nx = Ey*np.exp(-1j*0.5*x_dir)
+# t_wave_iny = yc_wave_in_px+yc_wave_in_nx
+# z_total_re = np.real(t_wave_inz)
+# y_total_re = np.real(t_wave_iny)
+
+# I_std = abs(Ex+t_wave_inx)**2+abs(Ey+t_wave_iny)**2+abs(Ez+t_wave_inz)**2
+# plt.title('std Intensity')
+# plt.imshow(I_std/np.max(I_std), cmap='hot')
+# plt.colorbar()
+# plt.show()
+
+# plt.title('stdwave')
+# plt.quiver(x,y, z_total_re+Ez_r, Ey_r+y_total_re, color= 'red', scale = 15)
+# plt.imshow(eps11)
+# plt.colorbar()
+# plt.show()
