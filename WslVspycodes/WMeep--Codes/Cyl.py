@@ -69,39 +69,104 @@ plt.title('Ez + Ey')
 
 plt.colorbar()
 plt.show()
-x_dir =[x_dir[0] for x_dir in np.array(k_points)]
-for x_dir in x_dir:
-    # Calculate the components of the standing wave
-    zc_wave_in_px = Ez * np.exp(1j * 1* x_dir)
-    zc_wave_in_nx = Ez * np.exp(-1j *1 * x_dir)
-    t_wave_inz = zc_wave_in_px + zc_wave_in_nx
+
+
+
+Epx_list = []
+Epy_list = []
+Epz_list = []
+Enx_list = []
+Eny_list = []
+Enz_list = []
+Ip_list = []
+In_list = []
+I_total_list = []
+x_dir= 10
+for x in range(x_dir):
+    Epx_list=Epx_list+list(Ex*np.exp(1j*x))
+    Epy_list=Epy_list+list(Ey*np.exp(1j*x))
+    Epz_list=Epz_list+list(Ez*np.exp(1j*x))
+    Enx_list=Enx_list+list(Ex*np.exp(-1j*x))
+    Eny_list=Eny_list+list(Ey*np.exp(-1j*x))
+    Enz_list=Enz_list+list(Ez*np.exp(-1j*x))
+# Epx_list = np.array(Epx_list)
+# Enx_list = np.array(Enx_list)
+# Epy_list = np.array(Epy_list)
+# Eny_list = np.array(Eny_list)
+# Epz_list = np.array(Epz_list)
+# Enz_list = np.array(Enz_list)
+
+# t = Epx_list+Enx_list
+# print(t.shape)
+
+
+I_t = np.abs(Epx_list+Enx_list)**2 +np.abs(Epy_list+Eny_list)**2 +np.abs(Epz_list+Enz_list)**2
+
+
+# Ip_list = list(np.abs(Epx_list)**2 +np.abs(Epy_list)**2 +np.abs(Epz_list)**2)
+# In_list =list(np.abs(Enx_list)**2 +np.abs(Eny_list)**2 +np.abs(Enz_list)**2)
+x, y = np.meshgrid(1280*np.linspace(0,1,1280),128*np.linspace(0,1,128))
+# print(Epx_list.shape)
+# I_total_list = Ip_list+In_list
+# I_total_list = np.array(I_total_list).transpose()
+plt.imshow(I_t/np.max(I_t), cmap='hot')
+# plt.quiver(x,y,np.real(Epz_list+Enz_list), np.real(Epy_list+Eny_list), color='green', scale=20)
+plt.colorbar()
+plt.title('total inteisty_Itotla_list')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# x_dir =[x_dir[0] for x_dir in np.array(k_points)]
+# for x_dir in x_dir:
+#     # Calculate the components of the standing wave
+#     zc_wave_in_px = Ez * np.exp(1j * 1* x_dir)
+#     zc_wave_in_nx = Ez * np.exp(-1j *1 * x_dir)
+#     t_wave_inz = zc_wave_in_px + zc_wave_in_nx
     
-    xc_wave_in_px = Ex * np.exp(1j * 1 * x_dir)
-    xc_wave_in_nx = Ex * np.exp(-1j * 1 * x_dir)
-    t_wave_inx = xc_wave_in_px + xc_wave_in_nx
+#     xc_wave_in_px = Ex * np.exp(1j * 1 * x_dir)
+#     xc_wave_in_nx = Ex * np.exp(-1j * 1 * x_dir)
+#     t_wave_inx = xc_wave_in_px + xc_wave_in_nx
 
-    yc_wave_in_px = Ey * np.exp(1j * 1 * x_dir)
-    yc_wave_in_nx = Ey * np.exp(-1j * 1 * x_dir)
-    t_wave_iny = yc_wave_in_px + yc_wave_in_nx
+#     yc_wave_in_px = Ey * np.exp(1j * 1 * x_dir)
+#     yc_wave_in_nx = Ey * np.exp(-1j * 1 * x_dir)
+#     t_wave_iny = yc_wave_in_px + yc_wave_in_nx
     
-    z_total_re = np.real(t_wave_inz)
-    y_total_re = np.real(t_wave_iny)
+#     z_total_re = np.real(t_wave_inz)
+#     y_total_re = np.real(t_wave_iny)
 
-    # Calculate the standing wave intensity
-    I_std = abs(Ex + t_wave_inx)**2 + abs(Ey + t_wave_iny)**2 + abs(Ez + t_wave_inz)**2
+#     # Calculate the standing wave intensity
+#     I_std = abs(Ex + t_wave_inx)**2 + abs(Ey + t_wave_iny)**2 + abs(Ez + t_wave_inz)**2
 
-    # Plot the intensity
-    plt.title(f'Standing Wave Intensity for x_dir = {x_dir:.2f}')
-    plt.imshow(I_std/np.max(I_std), cmap='hot')
-    plt.colorbar()
-    plt.show()
+#     # Plot the intensity
+#     plt.title(f'Standing Wave Intensity for x_dir = {x_dir:.2f}')
+#     plt.imshow(I_std/np.max(I_std), cmap='hot')
+#     plt.colorbar()
+#     plt.show()
 
-    # Plot the quiver plot with updated fields
-    plt.title(f'Standing Wave Field for x_dir = {x_dir:.2f}')
-    plt.quiver(x, y, z_total_re + Ez_r, Ey_r + y_total_re, color='red', scale=15)
-    plt.imshow(eps11, alpha=0.5)
-    plt.colorbar()
-    plt.show()
+#     # Plot the quiver plot with updated fields
+#     plt.title(f'Standing Wave Field for x_dir = {x_dir:.2f}')
+#     plt.quiver(x, y, z_total_re + Ez_r, Ey_r + y_total_re, color='red', scale=15)
+#     plt.imshow(eps11, alpha=0.5)
+#     plt.colorbar()
+#     plt.show()
 
 
 
