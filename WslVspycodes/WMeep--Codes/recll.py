@@ -7,7 +7,7 @@ num_bands = 4
 resolution = 32
 n_lo =1.99
 width = 0.5
-p_gap= 1
+p_gap= 0.25
 geometry_lattice = mp.Lattice(size=mp.Vector3(0,4,4),
                               basis1=mp.Vector3(1, 0))  # 1d cell
 
@@ -50,12 +50,12 @@ pcm = ax[1].pcolormesh(eps11,cmap='hot',alpha=0.5)
 fig.colorbar(pcm, ax= ax[1])
 # plt.show()
 
-mpb.output_efield(ms,1)
+mpb.output_efield(ms,2)
 ms.compute_zparities()
 mpb.display_zparities(ms)
 import h5py
 
-with h5py.File('recll-e.k05.b01.h5', 'r') as file:
+with h5py.File('recll-e.k05.b02.h5', 'r') as file:
     data0 = file['x.i'][:]
     data1 = file['x.r'][:]
     data2 = file['y.i'][:]

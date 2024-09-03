@@ -40,6 +40,7 @@ plt.show()
 
 import h5py
 mpb.output_efield(ms,1)
+mpb.output_at_kpoint(2, 1)
 
 with h5py.File('Cyl-e.k05.b01.h5', 'r') as file:
     data0 = file['x.i'][:]

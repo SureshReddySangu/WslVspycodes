@@ -80,9 +80,12 @@ I1 = np.abs(Ex)**2 +np.abs(Ey)**2 +np.abs(Ez)**2
 plt.imshow(I1/np.max(I1), cmap='hot')
 plt.colorbar()
 plt.show()
+
+# plt.plot(np.abs(Ex))
+# plt.show()
 kx = k_points[-1].x
 from matplotlib import figure
-# for standing wave
+# # for standing wave
 x_dir = 20
 Ex_total=[]
 Ey_total=[]
@@ -95,7 +98,7 @@ Ex_total = np.array(Ex_total)
 Ey_total = np.array(Ey_total)
 Ez_total = np.array(Ez_total)
 print(Ex_total.shape)
-x,y = np.meshgrid(1600*np.linspace(0,1,1600),3200*np.linspace(0,1,3200))
+# x,y = np.meshgrid(1600*np.linspace(0,1,1600),3200*np.linspace(0,1,3200))
 I_total = abs(Ex_total)**2 +abs(Ey_total)**2 +abs(Ez_total)**2
 # plt.figure(figsize=(32,32), dpi=100)
 plt.imshow(I_total/np.max(I_total), cmap='hot')

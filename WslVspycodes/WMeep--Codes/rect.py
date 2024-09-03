@@ -36,7 +36,7 @@ gaps = ms.gap_list
 fig, ax = plt.subplots(1, 1)
 
 for i, tmz, in zip(range(len(t_frqs)), t_frqs):
-    ax.scatter([i] * len(tmz), tmz, color="blue", s=0.2, label="TE")
+    ax.scatter([i] * len(tmz), tmz, color="red", s=0.2, label="TE")
     
 # Calculate and plot the light line
 kx_vals = np.linspace(0, 1, len(k_points))
@@ -48,19 +48,21 @@ ax.set_xlabel("k-points")
 ax.set_ylabel("Frequency")
 ax.set_title("TM Frequencies & TE Frequencies")
 
-for gap in gaps:
-    if gap[0] > 1:
-        ax.fill_between(range(len(k_points)), gap[1], gap[2], color="blue", alpha=0.5)
-for gap in gaps:
-    if gap[0] > 1:
-        ax.fill_between(range(len(k_points)), gap[1], gap[2], color="green", alpha=0.5)
-ax.grid(True)
+# for gap in gaps:
+#     if gap[0] > 1:
+#         ax.fill_between(range(len(k_points)), gap[1], gap[2], color="blue", alpha=0.5)
+# for gap in gaps:
+#     if gap[0] > 1:
+#         ax.fill_between(range(len(k_points)), gap[1], gap[2], color="green", alpha=0.5)
+# ax.grid(True)
 
-plt.show()
+# plt.show()
 ms.compute_zparities()
 ms.compute_yparities()
 
 # plt.show()
+
+# mpb.output_at_kpoint(0,3)
 mpb.output_efield(ms,1)
 import h5py
 
@@ -82,53 +84,38 @@ Ex = Ex_r + 1j*Ex_i
 Ey = Ey_r + 1j*Ey_i
 Ez = Ez_r + 1j*Ez_i
 
-I =abs(Ex)**2 + abs(Ey)**2 + abs(Ez)**2
-fig= plt.imshow(I/np.max(I), cmap='hot' )
+# I =abs(Ex)**2 + abs(Ey)**2 + abs(Ez)**2
+# fig= plt.imshow(I/np.max(I), cmap='hot' )
+# plt.colorbar()
+# plt.show()
+
+# x,y = np.meshgrid(np.linspace(0,1,128),np.linspace(0,1,128))
+# plt.quiver(x,y,Ez_r, Ey_r, color='red', scale = 15)
+# eps11=ms.get_epsilon()
+# plt.imshow(eps11, cmap='gray', alpha=0.2)
+# plt.title('Ez + Ey')
+# plt.ylim(0.4,0.6)
+# plt.xlim(0.4,0.65)
+# plt.colorbar()
+a = 1
+K_0 = 0.5*(2*np.pi)/a
+Ez_list =[]
+Ey_list = []
+Ex_list =[]
+for x in np.linspace( 0, 4*2*a,4*64):
+    Ez_list.append(Ez[64,:]*np.cos(K_0*x))
+    Ey_list.append(Ey[64,:]*np.cos(K_0*x))
+    Ex_list.append(Ex[64,:]*np.cos(K_0*x))
+
+Ez_list= np.abs(np.array(Ez_list))**2
+Ey_list = np.abs(np.array(Ey_list))**2
+Ex_list = np.abs(np.array(Ex_list))**2
+
+I_list = Ez_list+Ey_list+Ex_list
+
+plt.imshow(I_list, cmap='hot')
 plt.colorbar()
-plt.show()
 
-x,y = np.meshgrid(np.linspace(0,1,128),np.linspace(0,1,128))
-plt.quiver(x,y,Ez_r, Ey_r, color='red', scale = 15)
-eps11=ms.get_epsilon()
-plt.imshow(eps11, cmap='gray', alpha=0.2)
-plt.title('Ez + Ey')
-plt.ylim(0.4,0.6)
-plt.xlim(0.4,0.65)
-plt.colorbar()
-
-
-
-
-# fig, ax = plt.subplots(3, 3, gridspec_kw={ 'height_ratios': [1, 1, 2]})
-# im1 = ax[0, 0].imshow(Ex_i , cmap='RdBu')
-# ax[0, 0].set_title(' Ex')
-# x, y = np.meshgrid(np.linspace(0, 1, 128), np.linspace(0, 1, 128))
-# ax[0, 0].quiver(x, y,Ex_i, color='r')
-# fig.colorbar(im1, ax=ax[0, 0])
-
-# im2 = ax[0, 1].imshow(Ey_i , cmap='RdBu')
-# ax[0, 1].set_title('Ey')
-# fig.colorbar(im2, ax=ax[0, 1])
-
-# im3 = ax[0, 2].imshow(Ez_i * Ez_r, cmap='RdBu')
-# ax[0, 2].set_title(' Ez')
-# fig.colorbar(im3, ax=ax[0, 2])
-
-# im5 = ax[1, 0].imshow(Ex_r, cmap='RdBu')
-# ax[1, 0].set_title('Ex_r')
-# fig.colorbar(im5, ax=ax[1, 0])
-
-# im6 = ax[1, 1].imshow(Ey_r, cmap='RdBu')
-# ax[1, 1].set_title('Ey_r')
-# fig.colorbar(im6, ax=ax[1, 1])
-
-# im7 = ax[1, 2].imshow(Ez_r, cmap='RdBu')
-# ax[1, 2].set_title('Ez_r')
-# fig.colorbar(im7, ax=ax[1, 2])
-
-# im4 = ax[2, 0].imshow(I, cmap='RdBu')
-# ax[2, 0].set_title('I')
-# fig.colorbar(im4, ax=ax[2, 0])
 
 plt.tight_layout()
 
