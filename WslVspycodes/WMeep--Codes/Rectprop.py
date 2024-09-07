@@ -61,8 +61,8 @@ Ey_list = []
 Ex_list =[]
 period_inx = 4*2*a
 resl_inx = 2*64
-period_intime = 2*np.pi*a
-resl_intime =10
+period_intime = 4*2*np.pi*a
+resl_intime =128
 t_values = np.linspace(0, 2*period_intime, resl_intime)
 x_values = np.linspace(0, period_inx*1, resl_inx)
 
@@ -113,6 +113,7 @@ Ix_list = np.abs(Ex_list)**2
 I_tot_list = Iz_list + Iy_list +Ix_list
 X, Y = np.meshgrid(resl_inx*np.linspace(0,1,resl_inx), 
                    resl_inx*np.linspace(0,1, resl_inx))
+X1, Y1 = np.meshgrid(np.linspace(0, period_inx, resl_inx), [0])
 fig, ax  = plt.subplots(2,3)
 Ezplt_v = ax[0,0].imshow(np.real(Ez_list), cmap= 'RdBu', aspect='equal')
 ax[0,0].quiver(X, np.real(Ez_list), color = 'green', scale = 5)
@@ -137,16 +138,20 @@ Ezplt_ani = ax[0,2].imshow(np.real(Ez_list), cmap= 'RdBu', aspect='equal')
 ax[0,2].set_title('propagating Ez ani filed ')
 plt.colorbar(Ezplt_ani, ax = ax[0,2])
 
-Ezplt_aniV = ax[1,2].imshow(np.real(Ez_list), cmap= 'RdBu', aspect='equal')
-ax[1,2].quiver(X, np.real(Ez_list), color ='green', scale = 10)
-ax[1,2].set_title('propagating Ez V filed ')
-plt.colorbar(Ezplt_aniV, ax = ax[1,2])
-
+Ezplt_Vect = ax[1,2].quiver(X1, Y1, np.zeros_like(np.real(Ez_list[0,:])), np.zeros_like(np.real(Ez_list[0,:])), color='green', scale=15)
+ax[1,2].set_title('Propagating Ez vector field')
+plt.colorbar(Ezplt_Vect, ax =ax[1,2])
 from matplotlib.animation import FuncAnimation
 def update(frame):
-    Ezplt_ani.set_data(np.real(Ez_list[:frame]))
-    Ezplt_aniV.set_data(np.real(Ez_list[:frame]))
-    return[Ezplt_ani], [Ezplt_aniV]
+    mask1= np.zeros_like(np.real(Ez_list))
+    mask1[frame,:] = np.real(Ez_list[frame,:])
+    Ezplt_ani.set_array(mask1)
+        # Update the quiver plot
+    U = np.real(Ez_list[frame, :])
+    V = np.zeros_like(U)  # For 1D propagation, V component can be 0
+    Ezplt_Vect.set_UVC(U, V)
+
+    return[Ezplt_ani, Ezplt_Vect]
 anim = FuncAnimation(fig, update, frames=(len(t_values)))
 
 plt.tight_layout()
