@@ -116,17 +116,17 @@ X, Y = np.meshgrid(resl_inx*np.linspace(0,1,resl_inx),
 X1, Y1 = np.meshgrid(np.linspace(0, period_inx, resl_inx), [0])
 fig, ax  = plt.subplots(2,3)
 Ezplt_v = ax[0,0].imshow(np.real(Ez_list), cmap= 'RdBu', aspect='equal')
-ax[0,0].quiver(X, np.real(Ez_list), color = 'green', scale = 5)
+ax[0,0].quiver(X,Y, np.real(Ez_list), np.zeros_like(np.real(Ez_list)), color = 'green', scale = 5)
 ax[0,0].set_title('propagating Ez filed ')
 plt.colorbar(Ezplt_v, ax = ax[0,0])
 
 Eyplt = ax[0,1].imshow(np.real(Ey_list), cmap= 'RdBu', aspect='equal')
-ax[0,1].quiver(X, np.real(Ey_list), color = 'green', scale = 15)
+ax[0,1].quiver(X, Y, np.real(Ey_list), np.zeros_like(np.real(Ey_list)), color = 'green', scale = 15)
 ax[0,1].set_title('propagating Ey filed ')
 plt.colorbar(Eyplt, ax = ax[0,1])
 
 Explt = ax[1,0].imshow(np.real(Ex_list), cmap= 'RdBu', aspect='equal')
-ax[1,0].quiver(X, np.real(Ex_list), color = 'green', scale = 15)
+ax[1,0].quiver(X,Y, np.real(Ex_list), np.zeros_like(np.real(Ex_list)), color = 'green', scale = 15)
 ax[1,0].set_title('propagating Ex filed ')
 plt.colorbar(Explt, ax = ax[1,0])
 
