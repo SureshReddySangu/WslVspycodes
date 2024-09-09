@@ -131,8 +131,34 @@ def update (frame):
 anim = FuncAnimation(fig2, update, frames=len(t_values1), interval = 500)
 plt.show()
 
+fig3, ax3=plt.subplots()
+X3, Y3 = np.linspace(0.5,1,64), np.linspace(0,1,128)
+result1 =np.array([row[64:128] for row in Ez_list_3d[0][0:128]])
+result2 =np.array([row[64:128] for row in Ex_list_3d[0][0:128]])
+# factor= np.mean(np.max(np.real(result1)))
+# factor1 = np.mean(np.max(np.real(result2)))
+# s = factor+ factor1
 
-
+vect1= ax3. quiver(X3, Y3, np.real(result1), np.real(result2), color = 'red',
+                    scale =15, scale_units ='xy',headwidth = 3, headlength =4 )
+def updates (frame):
+    result1 =np.array([row[64:128] for row in Ez_list_3d[frame][0:128]])
+    result2 =np.array([row[64:128] for row in Ex_list_3d[frame][0:128]])
+    vect1.set_UVC(np.real(result1), np.real(result2))
+    ax3.set_title(f'Vectors at t = {t_values[frame]:.2f}')
+    return [vect1]
+anim1 = FuncAnimation(fig3, updates, frames = len(t_values1), interval =500)
+#stream plot
+# stream = ax3[1].streamplot(X3, Y3, np.real(result1), np.real(result2), color ='red', linewidth = 2)
+# def updates1 (frame):
+#     ax3[1].cla()
+#     result1 =np.array([row[64:128] for row in Ez_list_3d[frame][0:128]])
+#     result2 =np.array([row[64:128] for row in Ex_list_3d[frame][0:128]])
+#     stream =ax3[1].streamplot(X3, Y3,np.real(result1), np.real(result2), color ='red', linewidth = 2 )
+#     ax3[1].set_title(f'Vectors at t = {t_values[frame]:.2f}')
+#     return stream
+# anim2 = FuncAnimation(fig3, updates1, frames = len(t_values1), interval =500)
+plt.show()
 
 
 
