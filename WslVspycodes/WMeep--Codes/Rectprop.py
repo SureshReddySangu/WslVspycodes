@@ -116,30 +116,42 @@ X, Y = np.meshgrid(resl_inx*np.linspace(0,1,resl_inx),
 X1, Y1 = np.meshgrid(np.linspace(0, period_inx, resl_inx), [0])
 fig, ax  = plt.subplots(2,3)
 Ezplt_v = ax[0,0].imshow(np.real(Ez_list), cmap= 'RdBu', aspect='equal')
-ax[0,0].quiver(X,Y, np.real(Ez_list), np.zeros_like(np.real(Ez_list)), color = 'green', scale = 5)
+ax[0,0].quiver(X,Y, np.real(Ez_list), np.real(Ex_list), color = 'green', scale = 5)
 ax[0,0].set_title('propagating Ez filed ')
+ax[0,0].set_xlabel('cell size')
+ax[0,0].set_ylabel('cell size')
 plt.colorbar(Ezplt_v, ax = ax[0,0])
 
 Eyplt = ax[0,1].imshow(np.real(Ey_list), cmap= 'RdBu', aspect='equal')
 ax[0,1].quiver(X, Y, np.real(Ey_list), np.zeros_like(np.real(Ey_list)), color = 'green', scale = 15)
 ax[0,1].set_title('propagating Ey filed ')
+ax[0,1].set_xlabel('cell size')
+ax[0,1].set_ylabel('cell size')
 plt.colorbar(Eyplt, ax = ax[0,1])
 
 Explt = ax[1,0].imshow(np.real(Ex_list), cmap= 'RdBu', aspect='equal')
 ax[1,0].quiver(X,Y, np.real(Ex_list), np.zeros_like(np.real(Ex_list)), color = 'green', scale = 15)
 ax[1,0].set_title('propagating Ex filed ')
+ax[1,0].set_xlabel('cell size')
+ax[1,0].set_ylabel('cell size')
 plt.colorbar(Explt, ax = ax[1,0])
 
 Ezplt = ax[1,1].imshow(np.real(Ez_list), cmap= 'RdBu', aspect='equal')
 ax[1,1].set_title('propagating Ez filed ')
+ax[1,1].set_xlabel('cell size')
+ax[1,1].set_ylabel('cell size')
 plt.colorbar(Ezplt, ax = ax[1,1])
 
 Ezplt_ani = ax[0,2].imshow(np.real(Ez_list), cmap= 'RdBu', aspect='equal')
 ax[0,2].set_title('propagating Ez ani filed ')
+ax[0,2].set_xlabel('propagation in x direction')
+ax[0,2].set_ylabel('cell size')
 plt.colorbar(Ezplt_ani, ax = ax[0,2])
 
 Ezplt_Vect = ax[1,2].quiver(X1, Y1, np.zeros_like(np.real(Ez_list[0,:])), np.zeros_like(np.real(Ez_list[0,:])), color='green', scale=15)
 ax[1,2].set_title('Propagating Ez vector field')
+ax[1,2].set_ylabel('amplitude')
+ax[1,2].set_xlabel('cell size')
 plt.colorbar(Ezplt_Vect, ax =ax[1,2])
 from matplotlib.animation import FuncAnimation
 def update(frame):
