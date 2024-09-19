@@ -62,6 +62,7 @@ Ez = Ez_r + 1j*Ez_i
 
 I =abs(Ex)**2 + abs(Ey)**2 + abs(Ez)**2
 fig= plt.imshow(I/np.max(I), cmap='hot')
+plt.title('Electric field Intensity')
 plt.colorbar()
 plt.show()
 x,y = np.meshgrid(np.linspace(0,1,128),np.linspace(0,1,128))

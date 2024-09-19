@@ -82,19 +82,20 @@ Ex = Ex_r + 1j*Ex_i
 Ey = Ey_r + 1j*Ey_i
 Ez = Ez_r + 1j*Ez_i
 
-# I =abs(Ex)**2 + abs(Ey)**2 + abs(Ez)**2
-# fig= plt.imshow(I/np.max(I), cmap='hot' )
-# plt.colorbar()
-# plt.show()
+I =abs(Ex)**2 + abs(Ey)**2 + abs(Ez)**2
+fig= plt.imshow(I/np.max(I), cmap='hot' )
+plt.title('Electric field Intensity')
+plt.colorbar(label ="intensity", orientation ="vertical")
+plt.show()
 
-# x,y = np.meshgrid(np.linspace(0,1,128),np.linspace(0,1,128))
-# plt.quiver(x,y,Ez_r, Ey_r, color='red', scale = 15)
-# eps11=ms.get_epsilon()
-# plt.imshow(eps11, cmap='gray', alpha=0.2)
-# plt.title('Ez + Ey')
-# plt.ylim(0.4,0.6)
-# plt.xlim(0.4,0.65)
-# plt.colorbar()
+x,y = np.meshgrid(np.linspace(0,1,128),np.linspace(0,1,128))
+plt.quiver(x,y,Ez_r, Ey_r, color='red', scale = 15)
+eps11=ms.get_epsilon()
+# plt.imshow(eps11, cmap='viridis', alpha=0.2)
+plt.title('Polarisation of Electric field')
+plt.ylim(0.35,0.65)
+plt.xlim(0.3,0.7)
+# plt.colorbar(label ="epsilon of the material", orientation ="vertical")
 a = 1
 K_0 = 0.5*(2*np.pi)/a
 Ez_list =[]
