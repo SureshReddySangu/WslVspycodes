@@ -18,7 +18,7 @@ cell_in_y =4
 cell_in_z =4
 geometry_lattice = mp.Lattice(size = mp.Vector3(cell_in_x, cell_in_y, cell_in_z),
                               basis1= mp.Vector3(1,0))
-k_points = [mp.Vector3(kx) for kx in np.linspace(0,0.5,5)]
+k_points = [mp.Vector3(kx) for kx in np.linspace(0.45,0.5,5)]
 default_material = mp.Medium(index=1)
 
 geometry = [
