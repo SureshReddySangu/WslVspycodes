@@ -5,21 +5,22 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 #---------------------------specifications of the cell-------------#
 num_bands = 4
-resolution =64
+resolution =32
 n_lo = 1.9935
 #---------------physical parameters in nm--------------#
 a =0.350
 pie = np.pi
 amp = 0.124
-wid = 0.280
+wid = 0.200
 thk = 0.200
+
 dx = (1/resolution)
 #---------- aligator with gap = 0 --------------#
 gaap =0
 #simualtion cell size
 cell_in_x = 1
-cell_in_y = 15
-cell_in_z = 15
+cell_in_y = 4
+cell_in_z = 4
 #lattice
 geometry_lattice = mp.Lattice(size = mp.Vector3(cell_in_x, cell_in_y, cell_in_z),
                               basis1=mp.Vector3(1))
@@ -62,7 +63,7 @@ ms = mpb.ModeSolver(
     default_material= default_materail
 )
 #---------------Run the y-odd z-even modes------------------#
-ms.run_te()
+ms.run()
 eps = ms.get_epsilon()
 ms.output_epsilon
 #------------------2d view of the geometry -------------#
